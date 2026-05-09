@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Colosseum — Log In</title>
+  <link rel="stylesheet" href="css/login.css" />
+</head>
+<body>
+
+  <div class="login-window">
+    <div class="window-titlebar">
+      <div class="window-dots">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+      </div>
+      <span class="window-title">Pinkle Colosseum</span>
+    </div>
+
+    <div class="login-body">
+      <div class="login-heading" id="login-heading">Welcome back</div>
+      <div class="login-sub" id="login-sub">Log in to your account</div>
+
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="username-input" placeholder="Enter your username" />
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="password-input" placeholder="Enter your password" />
+      </div>
+
+      <div id="auth-error" class="auth-error" style="display:none;"></div>
+
+      <button class="submit-btn" id="submit-btn">Log In</button>
+
+      <div class="mode-toggle">
+        <span id="toggle-text">Don't have an account?</span>
+        <button class="toggle-btn" id="toggle-btn">Register</button>
+      </div>
+
+      <div class="back-link">
+        <a href="index.html">← Back to home</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let mode = 'login'; // 'login' | 'register'
+
+    const heading    = document.getElementById('login-heading');
+    const sub        = document.getElementById('login-sub');
+    const submitBtn  = document.getElementById('submit-btn');
+    const toggleBtn  = document.getElementById('toggle-btn');
+    const toggleText = document.getElementById('toggle-text');
+    const errorEl    = document.getElementById('auth-error');
+    const usernameInput = document.getElementById('username-input');
+    const passwordInput = document.getElementById('password-input');
+
+    function setMode(m) {
+      mode = m;
+      errorEl.style.display = 'none';
+      errorEl.textContent = '';
+      if (mode === 'login') {
+        heading.textContent = 'Welcome back';
+        sub.textContent = 'Log in to your account';
+        submitBtn.textContent = 'Log In';
+        toggleText.textContent = "Don't have an account?";
+        toggleBtn.textContent = 'Register';
+      } else {
+        heading.textContent = 'Create an account';
+        sub.textContent = 'Pick a username and password';
+        submitBtn.textContent = 'Register';
+        toggleText.textContent = 'Already have an account?';
+        toggleBtn.textContent = 'Log In';
+      }
+    }
+
+    function showError(msg) {
+      errorEl.textContent = msg;
+      errorEl.style.display = 'block';
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      setMode(mode === 'login' ? 'register' : 'login');
+    });
+
+    async function handleSubmit() {
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!username || !password) {
+        showError('Please fill in all fields.');
+        return;
+      }
+
+      const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
+      submitBtn.disabled = true;
+      submitBtn.textContent = mode === 'login' ? 'Logging in...' : 'Registering...';
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          showError(data.error || 'Something went wrong. Try again.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = mode === 'login' ? 'Log In' : 'Register';
+          return;
+        }
+
+        // Store token and username then go to the game
+        localStorage.setItem('colosseum_token', data.token);
+        localStorage.setItem('colosseum_username', data.username);
+        window.location.href = 'index.html';
+      } catch (err) {
+        showError('Could not connect to server. Is it running?');
+        submitBtn.disabled = false;
+        submitBtn.textContent = mode === 'login' ? 'Log In' : 'Register';
+      }
+    }
+
+    submitBtn.addEventListener('click', handleSubmit);
+
+    // Allow Enter key to submit
+    [usernameInput, passwordInput].forEach(input => {
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') handleSubmit();
+      });
+    });
+  </script>
+
+</body>
+</html>

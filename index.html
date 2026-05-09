@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pinkle's Secret Colosseum</title>
+  <link rel="stylesheet" href="css/index.css" />
+</head>
+<body>
+
+  <div class="topbar">
+    <button class="login-btn" onclick="window.location.href='login.html'">Log In</button>
+  </div>
+
+  <div class="window">
+    <div class="window-titlebar">
+      <div class="window-dots">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+      </div>
+      <span class="window-title">Pinkle's Secret Colosseum</span>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab active" data-tab="fighters">Your Fighters</div>
+      <div class="tab" data-tab="shop">Shop</div>
+      <div class="tab-spacer"></div>
+      <div class="tab" data-tab="live">Live View</div>
+      <div class="tab" data-tab="upcoming">Upcoming</div>
+      <div class="tab" data-tab="leaderboard" id="lb-refresh">Leaderboard</div>
+      <div class="tab-spacer"></div>
+      <div class="tab" data-tab="coins" id="coins-tab">0 Coins</div>
+      <div class="tab" data-tab="profile">Profile</div>
+      <div class="tab-indicator" id="tab-indicator"></div>
+    </div>
+
+    <div id="tab-fighters" class="tab-content active">
+      <div class="roster-sidebar" id="roster-sidebar">
+        <div class="roster-sidebar-header" id="fighters-count">Your Roster — 0 / 6</div>
+      </div>
+      <div class="roster-main" id="roster-main">
+        <div class="roster-main-empty">
+          <div class="roster-empty-icon">⚔️</div>
+          <div class="roster-empty-label">No fighters yet</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-live" class="tab-content">
+      <div class="live-selector" id="live-selector">
+        <div class="live-selector-header">Live Fights</div>
+      </div>
+
+      <div class="live-main">
+        <div class="live-empty">
+          <div class="live-empty-icon">📡</div>
+          <div class="live-empty-label">No fight data yet</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-shop" class="tab-content">
+      <div class="shop-keeper-panel">
+        <div class="roster-sidebar-header">Shop</div>
+        <div class="shop-nav">
+          <button class="shop-nav-btn active" data-shop-tab="armor">Armor</button>
+          <button class="shop-nav-btn" data-shop-tab="potions">Potions</button>
+          <button class="shop-nav-btn" data-shop-tab="misc">Misc</button>
+        </div>
+        <div class="shop-keeper-bottom">
+          <div class="shopkeeper-message" id="shopkeeper-message"></div>
+          <pre class="shopkeeper-art" id="shopkeeper-art"></pre>
+          <div class="shopkeeper-name">The Armory</div>
+          <div class="shopkeeper-tagline">Est. 842 AR</div>
+        </div>
+      </div>
+      <div class="shop-items-panel" id="shop-items-panel"></div>
+    </div>
+
+    <div id="tab-upcoming" class="tab-content"></div>
+
+    <div id="tab-leaderboard" class="tab-content"></div>
+
+    <div id="tab-coins" class="tab-content">
+      <div class="shop-header">
+        <div class="shop-title">Coin Shop</div>
+        <div class="shop-sub">Coins are used to recruit fighters</div>
+      </div>
+      <div class="daily-claim" id="daily-claim">
+        <div class="daily-left">
+          <div class="daily-title">Daily Reward</div>
+          <div class="daily-sub">🪙 25 coins — resets at midnight</div>
+        </div>
+        <button class="daily-btn" id="daily-btn">Claim</button>
+      </div>
+
+      <div class="coin-tiers">
+
+        <div class="coin-tier">
+          <div class="tier-coins">🪙 100</div>
+          <div class="tier-label">Starter Pack</div>
+          <button class="tier-btn" data-coins="100">$5.00</button>
+        </div>
+
+        <div class="coin-tier featured">
+          <div class="tier-badge">Best Value</div>
+          <div class="tier-coins">🪙 225</div>
+          <div class="tier-label">Fighter's Purse</div>
+          <button class="tier-btn" data-coins="225">$10.00</button>
+        </div>
+
+        <div class="coin-tier">
+          <div class="tier-coins">🪙 500</div>
+          <div class="tier-label">Champion's Chest</div>
+          <button class="tier-btn" data-coins="500">$20.00</button>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="tab-profile" class="tab-content">
+      <div class="profile-card">
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar" id="profile-avatar">@</div>
+          <button class="edit-icon-btn" id="edit-icon-btn">Edit Icon</button>
+        </div>
+        <div class="profile-fields">
+          <div class="profile-field">
+            <span class="field-label">Username</span>
+            <span class="field-value" id="profile-username">—</span>
+          </div>
+          <div class="profile-field">
+            <span class="field-label">Global Rank</span>
+            <span class="field-value">~~</span>
+          </div>
+          <div class="profile-field">
+            <span class="field-label">Team Name</span>
+            <span class="field-value" id="team-name-display"></span>
+          </div>
+          <div class="profile-field" id="flag-field">
+            <span class="field-label">Flag</span>
+            <span class="field-value">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-record-section">
+        <div class="profile-record-title">Combat Record</div>
+        <div class="profile-record-stats">
+          <div class="profile-record-stat">
+            <div class="profile-record-value" id="stat-wins">0</div>
+            <div class="profile-record-label" id="stat-wins-word">Win</div>
+          </div>
+          <div class="profile-record-divider"></div>
+          <div class="profile-record-stat">
+            <div class="profile-record-value" id="stat-losses">0</div>
+            <div class="profile-record-label" id="stat-losses-word">Loss</div>
+          </div>
+          <div class="profile-record-divider"></div>
+          <div class="profile-record-stat">
+            <div class="profile-record-value" id="stat-fights">0</div>
+            <div class="profile-record-label" id="stat-fights-word">Fight</div>
+          </div>
+          <div class="profile-record-divider"></div>
+          <div class="profile-record-stat">
+            <div class="profile-record-value" id="stat-winrate">—</div>
+            <div class="profile-record-label">Win Rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="icon-modal-overlay">
+    <div class="icon-modal">
+      <div class="icon-modal-header">
+        <span>Edit Profile Icon</span>
+        <button class="modal-close" id="modal-close">×</button>
+      </div>
+      <div class="icon-modal-body">
+        <div class="icon-modal-preview">
+          <div class="icon-preview" id="icon-preview">@</div>
+        </div>
+        <div class="icon-section-label">Icon</div>
+        <div class="icon-grid" id="icon-grid"></div>
+        <div class="icon-section-label">Icon Color</div>
+        <div class="color-palette" id="color-palette"></div>
+        <div class="icon-section-label">Background</div>
+        <div class="color-palette" id="bg-color-palette"></div>
+      </div>
+      <div class="icon-modal-footer">
+        <button class="modal-cancel" id="modal-cancel">Cancel</button>
+        <button class="modal-apply" id="modal-apply">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/tabs.js"></script>
+  <script src="js/fighters.js"></script>
+  <script src="js/shop.js"></script>
+  <script src="js/live.js"></script>
+  <script src="js/upcoming.js"></script>
+  <script src="js/leaderboard.js"></script>
+  <script src="js/coins.js"></script>
+  <script src="js/profile.js"></script>
+
+</body>
+</html>
