@@ -137,15 +137,11 @@
     const loggedIn   = api.isLoggedIn();
     const myFighters = typeof fighters !== 'undefined' ? fighters : [];
     const entries    = getEntries();
-    const headerBtn  = loggedIn
-      ? `<button class="upcoming-generate-btn" id="generate-btn">${fights.length ? 'Regenerate' : 'Generate Fights'}</button>`
-      : '';
 
     if (!fights.length) {
       container.innerHTML = `
         <div class="upcoming-header">
           <span class="upcoming-title">Upcoming Fights</span>
-          ${headerBtn}
         </div>
         <div class="upcoming-empty">
           <div class="upcoming-empty-icon">...</div>
@@ -156,7 +152,6 @@
       container.innerHTML = `
         <div class="upcoming-header">
           <span class="upcoming-title">Upcoming Fights — 4 Arenas</span>
-          ${headerBtn}
         </div>
         <div class="upcoming-list">
           ${fights.map(f => {
